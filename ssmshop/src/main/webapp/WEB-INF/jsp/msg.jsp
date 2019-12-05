@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page import="java.util.*" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>莫冉工作室</title>
+<link href="${pageContext.request.contextPath}/css/style.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath }/js/dom.js"></script>
+</head>
+<body>
+<div id="divcontent">
+<table width="850px" border="0" cellspacing="0">
+  <tr>
+    <td style="padding:30px; text-align:center"><table width="60%" border="0" cellspacing="0" style="margin-top:70px">
+      <tr>
+        <td style="width:98"><img src="${pageContext.request.contextPath}/images/IconTexto_WebDev_009.jpg" width="128" height="128" /></td>
+        <td style="padding-top:30px">
+        <font style="font-weight:bold; color:#FF0000">
+
+	        <!--回显提示信息 -->
+	        <!-- user_Active.action -->
+	        <c:if test="${!empty successinfo }">
+	        	<%=request.getAttribute("successinfo") %>
+	        </c:if>
+	        <c:if test="${!empty failinfo }">
+	        	<%=request.getAttribute("failinfo") %>
+	        </c:if>
+	        
+	        <!-- login.action -->
+	        <c:if test="${!empty loginerror }">
+	        	<%=request.getAttribute("loginerror") %>
+	        </c:if> 
+	        <c:if test="${!empty loginerror2 }">
+	        	<%=request.getAttribute("loginerror2") %>
+	        </c:if>
+	        <c:if test="${!empty codeerror }">
+	        	<%=request.getAttribute("codeerror") %>
+	        	<% 
+					response.setHeader("Refresh", "2;URL=toRegistPage.action"); 
+				%> 
+	        </c:if>
+	        
+        </font>
+        <br />
+            <br />
+          <a href="${ pageContext.request.contextPath }/toIndex.action">首页</a>
+<%--           <a href="${ pageContext.request.contextPath }/toRegistPage.action">注册</a> --%>
+          <a href="${ pageContext.request.contextPath }/toLoginPage.action">登录</a>
+         </td>
+      </tr>
+    </table>
+    <h1>&nbsp;</h1></td>
+    </tr>
+</table>
+</div>
+</body>
+</html>

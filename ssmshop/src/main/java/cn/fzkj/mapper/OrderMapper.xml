@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.fzkj.mapper.OrderMapper">
+
+	<resultMap type="cn.fzkj.pojo.Order" id="orders">
+		<result property="oid" javaType="java.lang.Integer" column="oid"/>
+		<result property="total" javaType="java.lang.Double" column="total"/>
+		<result property="ordertime" javaType="java.util.Date" column="ordertime"/>
+		<result property="state" javaType="java.lang.Integer" column="state"/>
+		<result property="name" javaType="java.lang.String" column="name"/>
+		<result property="addr" javaType="java.lang.String" column="addr"/>
+		<result property="phone" javaType="java.lang.String" column="phone"/>
+		<association property="orderItems" javaType="cn.fzkj.pojo.OrderItem">
+			<result property="itemId" javaType="java.lang.Integer" column="itemid"/>
+			<result property="count" javaType="java.lang.Integer" column="count"/>
+			<result property="subtotal" javaType="java.lang.Double" column="subtotal"/>
+			<collection property="pro" javaType="cn.fzkj.pojo.product">
+				<result property="pid" javaType="java.lang.Integer" column="pid" />
+				<result property="pname" javaType="java.lang.String" column="pname" />
+				<result property="market_price" javaType="java.lang.Double" column="market_price" />
+				<result property="shop_price" javaType="java.lang.Double" column="shop_price" />
+				<result property="image" javaType="java.lang.String" column="image" />
+				<result property="pdesc" javaType="java.lang.String" column="pdesc" />
+				<result property="is_hot" javaType="java.lang.String" column="is_hot" />
+				<result property="pdate" javaType="java.util.Date" column="pdate" />
+				<result property="csid" javaType="java.lang.Integer" column="csid" />
+			</collection>
+		</association>
+	</resultMap>
+
+<!-- 保存订单 -->
+	<insert id="saveOrder" parameterType="cn.fzkj.pojo.Order">
+		<selectKey keyProperty="oid" keyColumn="oid" resultType="int" order="AFTER">
+			select last_insert_id();
+		</selectKey>
+		insert into orders (total,ordertime,state,name,phone,addr,uid) 
+			values(
+					#{total},
+					#{ordertime},
+					#{state},
+					#{user.name},
+					#{user.phone},
+					#{user.addr},
+					#{user.uid}
+				)
+	</insert>
+	<!-- 保存订单项 -->
+	<insert id="saveOrderItems" parameterType="cn.fzkj.pojo.Order">
+		insert into orderitem (count,subtotal,pid,oid)
+			values
+			<foreach collection="orderItems" item="item" separator=",">
+			(
+				${item.count},
+				${item.subtotal},
+				${item.pro.pid},
+				${oid}
+			)
+		</foreach>
+	</insert>
+	
+	<!-- 查找用户的订单数量 -->
+	<select id="findCountByUid" parameterType="Integer" resultType="Integer">
+		select count(*) from orders where uid=#{uid}
+	</select>
+	<!-- 查找用户的订单，分页显示 -->
+	<select id="findPageByUid" resultMap="orders">
+		select * from orders o ,orderitem oi ,product p where o.uid=#{param1} and o.oid=oi.oid and oi.pid=p.pid order by ordertime desc limit #{param2},#{param3}
+	</select>
+	
+	<!-- 查找订单 -->
+	<select id="findByOid" parameterType="int" resultMap="orders">
+		select * from orders o ,orderitem oi ,product p where o.oid=#{oid} and o.oid=oi.oid and oi.pid=p.pid
+	</select>
+	<!-- 修改用户的订单中的信息 -->
+	<update id="updateOrder" parameterType="cn.fzkj.pojo.Order">
+		update orders set name=#{name}, addr=#{addr}, phone=#{phone} where oid=#{oid}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

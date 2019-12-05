@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.fzkj.mapper.CategoryMapper">
+
+	<!-- type:一级分类的全限定类名 -->
+	<resultMap id="Category" type="cn.fzkj.pojo.Category">
+		<!-- 配置一对多的映射关系 
+			property:实体类中的属性名
+			javaType:实体类中的属性类型
+			column:数据库中对应字段的字段名
+		-->
+		<result property="cid" javaType="java.lang.Integer" column="cid"/>
+		<result property="cname" javaType="java.lang.String" column="cname"/>
+		
+		<!--
+			collection:一对多的映射关系 
+			property: 指的是集合的属性名称, 
+			ofType：指的是集合中元素的类型的全限定类名
+		-->
+		<collection property="categorySecondList" ofType="cn.fzkj.pojo.CategorySecond">
+			<result property="csid" javaType="java.lang.Integer" column="csid"/>
+			<result property="csname" javaType="java.lang.String" column="csname"/>
+			<result property="cid" javaType="java.lang.Integer" column="cid"/>
+		</collection>
+	</resultMap>
+		
+	<select id="findAll" resultMap="Category">
+		select * from category c , categorysecond cs where c.cid = cs.cid
+	</select>
+
+</mapper>

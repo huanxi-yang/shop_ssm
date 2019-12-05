@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+     xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!--引入的内容-->
+	<!--引入尾部的配置文件,dbConfig.properties在config下，所以不用加其他的-->
+	<context:property-placeholder location="classpath:config/dbConfig.properties"/>
+	
+	<!--配置数据源-->
+	<bean  id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+	      <!--注入数据库的四个参数-->
+		<property name="driverClass"  value="${jdbc.driver}"></property>
+		<property name="jdbcUrl"    value="${jdbc.url}"></property>
+		<property name="user"  value="${jdbc.username}"></property>
+		<property name="password"  value="${jdbc.password}"></property>
+	</bean>
+	
+	<!--配置SqlSessionFactory工厂  -->
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean ">
+	     <!--注入数据源-->
+	     <property name="dataSource" ref="dataSource"/>
+	     <!--读取Mybatis的核心配置文件-->
+	     <property name="configLocation"  value="classpath:mybatis/SqlMapConfig.xml"/>
+	</bean>
+	
+	<!--配置一个扫描器,作用：扫描mapper接口以及mapper接口对应的xml文件：-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!--配置扫描的具体的包--> 
+		<property name="basePackage" value="cn.fzkj.mapper"></property>
+	</bean>
+	
+</beans>

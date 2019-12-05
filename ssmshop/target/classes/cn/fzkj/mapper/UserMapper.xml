@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.fzkj.mapper.UserMapper">
+	<!-- 检验用户名是否存在 -->
+	<select id="checkName" parameterType="java.lang.String" resultType="cn.fzkj.pojo.User">
+		select * from user where username=#{username}
+	</select>
+	<!-- 用户注册 -->
+	<insert id="insertUserInfo" parameterType="cn.fzkj.pojo.User">
+		insert into user (uid,username,password,name,email,phone,addr,state,code)
+		values(
+			#{uid},
+			#{username},
+			#{password},
+			#{name},
+			#{email},
+			#{phone},
+			#{addr},
+			#{state},
+			#{code}
+		)
+	</insert>
+	<!-- 通过激活码查找用户 -->
+	<select id="findByCode" parameterType="cn.fzkj.pojo.User" resultType="cn.fzkj.pojo.User">
+		select * from user where code=#{code}
+	</select>
+	<!-- 激活用户，修改用户的state -->
+	<update id="update" parameterType="cn.fzkj.pojo.User">
+		update user set state=#{state} where code=#{code}
+	</update>
+	
+	<!-- 用户登录，判断用户名、密码、状态码 -->
+	<select id="checkLogin" parameterType="cn.fzkj.pojo.User" resultType="cn.fzkj.pojo.User">
+		select * from user where username=#{username} and password=#{password}
+	</select>
+</mapper>
+
